@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqb6jw6crxex8"]
+
+[ext_resource type="Script" path="res://src/UI/fps and other.gd" id="1_05qo5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_y65pf"]
+line_spacing = 0.0
+font_size = 32
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="debugUI" type="CanvasLayer"]
+
+[node name="fps and other" type="Label" parent="."]
+offset_left = 6.0
+offset_right = 114.0
+offset_bottom = 48.0
+text = "FPS: 60"
+label_settings = SubResource("LabelSettings_y65pf")
+script = ExtResource("1_05qo5")

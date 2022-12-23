@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://kjokbxjmbc6m"]
+[gd_scene load_steps=15 format=3 uid="uid://kjokbxjmbc6m"]
 
 [ext_resource type="Script" path="res://src/player/playerCat.gd" id="1_lfdbj"]
 [ext_resource type="Texture2D" uid="uid://d2g68tlyc4wq7" path="res://assets/player/Kitis.png" id="2_oggpy"]
@@ -8,42 +8,6 @@ size = Vector2(7, 5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c7y2q"]
 size = Vector2(6, 4)
-
-[sub_resource type="Animation" id="Animation_3lgar"]
-resource_name = "Die"
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera2D:zoom:x")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/1/type = "bezier"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera2D:zoom:y")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Camera2D:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(),
-"points": PackedFloat32Array(),
-"times": PackedFloat32Array()
-}
 
 [sub_resource type="Animation" id="Animation_ypex4"]
 resource_name = "IDLE"
@@ -84,7 +48,7 @@ tracks/0/keys = {
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Camera2D:zoom:x")
+tracks/1/path = NodePath("../Camera2D:zoom:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -95,7 +59,7 @@ tracks/1/keys = {
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Camera2D:zoom:y")
+tracks/2/path = NodePath("../Camera2D:zoom:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -106,7 +70,7 @@ tracks/2/keys = {
 tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Camera2D:rotation")
+tracks/3/path = NodePath("../Camera2D:rotation")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -189,7 +153,6 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7a0jp"]
 _data = {
-"Die": SubResource("Animation_3lgar"),
 "IDLE": SubResource("Animation_ypex4"),
 "MANUAL": SubResource("Animation_a00xu"),
 "RESET": SubResource("Animation_4q57q"),
@@ -199,11 +162,15 @@ _data = {
 "walk": SubResource("Animation_3s6rh")
 }
 
+[sub_resource type="SystemFont" id="SystemFont_na6ur"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_hf7cl"]
+font = SubResource("SystemFont_na6ur")
+font_size = 6
+
 [node name="playerCat" type="CharacterBody2D"]
 collision_layer = 0
 script = ExtResource("1_lfdbj")
-
-[node name="Camera2d" type="Camera2D" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -5)
@@ -230,3 +197,14 @@ autoplay = "IDLE"
 libraries = {
 "": SubResource("AnimationLibrary_7a0jp")
 }
+
+[node name="TempHP" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 26.0
+grow_horizontal = 2
+label_settings = SubResource("LabelSettings_hf7cl")
+horizontal_alignment = 1

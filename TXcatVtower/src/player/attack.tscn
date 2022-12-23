@@ -1,0 +1,75 @@
+[gd_scene load_steps=7 format=3 uid="uid://dps1v8duebosk"]
+
+[ext_resource type="Texture2D" uid="uid://ccfuf6ylv4g13" path="res://assets/player/Attacks.png" id="1_akkx7"]
+[ext_resource type="Script" path="res://src/player/overworld ground scratch.gd" id="1_j6ks6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b2vve"]
+size = Vector2(10, 12)
+
+[sub_resource type="Animation" id="Animation_dk3yg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_0dwgw"]
+resource_name = "groundedAttack"
+length = 0.30005
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.05, 0.1, 0.15, 0.2, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jsy3i"]
+_data = {
+"RESET": SubResource("Animation_dk3yg"),
+"groundedAttack": SubResource("Animation_0dwgw")
+}
+
+[node name="Attack" type="Node2D"]
+script = ExtResource("1_j6ks6")
+
+[node name="collider" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="collider"]
+position = Vector2(5, -3)
+shape = SubResource("RectangleShape2D_b2vve")
+debug_color = Color(0.701961, 0.176471, 0.196078, 0.419608)
+
+[node name="sprite" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.588235)
+position = Vector2(0, -4)
+texture = ExtResource("1_akkx7")
+hframes = 5
+vframes = 2
+frame = 6
+
+[node name="AP" type="AnimationPlayer" parent="."]
+root_node = NodePath("../sprite")
+autoplay = "groundedAttack"
+libraries = {
+"": SubResource("AnimationLibrary_jsy3i")
+}
+
+[connection signal="body_entered" from="collider" to="." method="_on_collider_body_entered"]
+[connection signal="animation_finished" from="AP" to="." method="_on_ap_animation_finished"]

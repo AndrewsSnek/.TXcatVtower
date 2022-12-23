@@ -1,21 +1,26 @@
-extends CharacterBody2D
+extends overworldCharacter
 
-var direction := Vector2(0,0)
-var airTime   := 0.0
-var facing    := 0
-var jumpKey   := false
-var noClimb   := 0.0
-var aniState  := 0
-var timeInDir := 0.0
-var enabled   := true
+var direction  := Vector2(0,0)
+var airTime    := 0.0
+var facing     := 0
+var jumpKey    := false
+var noClimb    := 0.0
+var aniState   := 0
+var timeInDir  := 0.0
+var enabled    := true
+var skyAttacks := 2
+
+var currentAttacks := []
+var groundAttack    = preload("res://src/player/attack.tscn")
 
 const gravity    := 1000
 const jumpConst  := -250
 const fallValues := [-200,-50 , 50 , 200, 500]
+const maxSkyAttacks := 2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	$TempHP.text = str(hp) + "/" + str(maxHp)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -23,10 +28,11 @@ func _process(delta):
 		aniState = 0
 		control()
 		
-		velocity.x += direction.x * delta * 1800
+		velocity.x += direction.x * delta * 2000
 		velocity = physicsCalulations(delta,velocity)
 		
 		jump()
+		actions()
 		move_and_slide()
 		
 		facingStuff(delta)
@@ -40,6 +46,7 @@ func physicsCalulations(delta, vel) -> Vector2:
 		aniState = 3
 	else:
 		airTime = 0
+		skyAttacks = maxSkyAttacks
 	
 	vel.y += gravity * delta
 	vel.x *= 0.9563524998 ** delta300 # TARGET ~0.8
@@ -63,6 +70,7 @@ func physicsCalulations(delta, vel) -> Vector2:
 			jumpKey = true
 			vel.x = jumpConst * facing * 1.5
 			noClimb = 0.5
+			skyAttacks = maxSkyAttacks
 	noClimb -= delta
 	
 	return vel
@@ -72,12 +80,29 @@ func control():
 	aniState = 1 if abs(direction.x) >= 0.2 else aniState
 
 func jump():
-	if airTime <= 0.05 and Input.is_action_just_pressed("jump"):
+	if airTime <= 0.05 and Input.is_action_just_pressed("jump") and !jumpKey:
 		jumpKey = true
-		velocity.y = jumpConst
+		velocity.y = jumpConst * 0.8
+	elif airTime <= 0.15 and Input.is_action_pressed("jump"):
+		velocity.y = jumpConst * 0.8 if velocity.y >= jumpConst * 0.8 else velocity.y
 	
 	if !Input.is_action_pressed("jump"):
 		jumpKey = false
+
+func actions():
+	if airTime <= 0.05:
+		Attack(2)
+	else:
+		Attack(1)
+
+func Attack(multiplier :int):
+	if Input.is_action_just_pressed("action") and skyAttacks > 0:
+		velocity = Vector2(300 * facing, -100)
+		currentAttacks.append(groundAttack.instantiate())
+		currentAttacks[-1].multiplier = multiplier
+		currentAttacks[-1].setFacing(facing)
+		add_child(currentAttacks[-1])
+		skyAttacks -= 1
 
 func facingStuff(delta):
 	if facing == 1:
@@ -90,6 +115,10 @@ func facingStuff(delta):
 			timeInDir -= delta
 		else:
 			timeInDir = 0
+
+func _damageRecieved(amount :int) -> void:
+	hp -= amount
+	$TempHP.text = str(hp) + "/" + str(maxHp)
 
 func animation():
 	if velocity.x > 0:

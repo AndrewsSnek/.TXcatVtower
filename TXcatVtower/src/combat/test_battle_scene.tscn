@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://nnv0voi5hrbl"]
+
+[sub_resource type="SystemFont" id="SystemFont_48ace"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_oxugq"]
+font = SubResource("SystemFont_48ace")
+font_size = 30
+
+[node name="TestBattleScene" type="Node2D"]
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Hp: 10/10"
+label_settings = SubResource("LabelSettings_oxugq")
